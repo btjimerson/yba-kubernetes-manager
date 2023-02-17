@@ -55,8 +55,8 @@ public class CreateProviderAction extends YbaClientAction {
         Region region = new Region();
         region.setName(args.getRegion());
         region.setCode(args.getRegion());
-        region.setLatitude(args.getLatitude());
-        region.setLongitude(args.getLongitude());
+        region.setLatitude(args.getRegionLatitude());
+        region.setLongitude(args.getRegionLongitude());
         region.setZoneList(zoneList);
         List<Region> regionList = new ArrayList<>();
         regionList.add(region);
@@ -73,7 +73,7 @@ public class CreateProviderAction extends YbaClientAction {
 
         //Provider
         Provider provider = new Provider();
-        provider.setName(args.getName());
+        provider.setName(args.getProviderName());
         provider.setCode("kubernetes");
         provider.setConfig(providerConfig);
         provider.setRegionList(regionList);

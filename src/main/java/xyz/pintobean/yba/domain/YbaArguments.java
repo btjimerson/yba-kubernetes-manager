@@ -1,20 +1,25 @@
 package xyz.pintobean.yba.domain;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+@Component
+@ConfigurationProperties(prefix="yba")
 public class YbaArguments {
 
+    private String adminPassword; 
     private String email;
     private String environment;
     private String fullName; 
     private String hostname;
-    private Integer latitude;
-    private Integer longitude;
     private String kubeconfigPath; 
-    private String name; 
     private String namespace;
-    private String password; 
+    private String providerName; 
     private String pullSecretName; 
     private String pullSecretPath; 
     private String region; 
+    private Integer regionLatitude;
+    private Integer regionLongitude;
     private Integer replicationFactor;
     private String serviceAccount;
     private String storageClass; 
@@ -25,6 +30,12 @@ public class YbaArguments {
     private String ysqlPassword;
     private String zone;
 
+    public String getAdminPassword() {
+        return adminPassword;
+    }
+    public void setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
+    }
     public String getEmail() {
         return email;
     }
@@ -49,29 +60,11 @@ public class YbaArguments {
     public void setHostname(String hostname) {
         this.hostname = hostname;
     }
-    public Integer getLatitude() {
-        return latitude;
-    }
-    public void setLatitude(Integer latitude) {
-        this.latitude = latitude;
-    }
-    public Integer getLongitude() {
-        return longitude;
-    }
-    public void setLongitude(Integer longitude) {
-        this.longitude = longitude;
-    }
     public String getKubeconfigPath() {
         return kubeconfigPath;
     }
     public void setKubeconfigPath(String kubeconfigPath) {
         this.kubeconfigPath = kubeconfigPath;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
     }
     public String getNamespace() {
         return namespace;
@@ -79,11 +72,11 @@ public class YbaArguments {
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
-    public String getPassword() {
-        return password;
+    public String getProviderName() {
+        return providerName;
     }
-    public void setPassword(String password) {
-        this.password = password;
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
     }
     public String getPullSecretName() {
         return pullSecretName;
@@ -102,6 +95,18 @@ public class YbaArguments {
     }
     public void setRegion(String region) {
         this.region = region;
+    }
+    public Integer getRegionLatitude() {
+        return regionLatitude;
+    }
+    public void setRegionLatitude(Integer regionLatitude) {
+        this.regionLatitude = regionLatitude;
+    }
+    public Integer getRegionLongitude() {
+        return regionLongitude;
+    }
+    public void setRegionLongitude(Integer regionLongitude) {
+        this.regionLongitude = regionLongitude;
     }
     public Integer getReplicationFactor() {
         return replicationFactor;
@@ -157,4 +162,5 @@ public class YbaArguments {
     public void setStorageClass(String storageClass) {
         this.storageClass = storageClass;
     }
+
 }

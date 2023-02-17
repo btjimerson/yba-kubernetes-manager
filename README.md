@@ -14,8 +14,16 @@ This is a Spring Boot application with Maven. To install and run the application
 mvn clean package spring-boot:run
 ```
 
-### Arguments
-The following command-line arguments are available, specified on the command line with a '--' delimiter:
+### Properties / environment variables
+The following environment variables or Java properties are available. Make sure they're prefixed with `'yba'`. These are [Spring Boot configuration properties](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config), so make sure that you format them according to Spring rules for the source. For example, to set `pullSecretName` as an environment variable:
+```
+export YBA_PULL_SECRET_NAME=pullSecret
+```
+
+and to set it in a properties file:
+```
+yba.pullSecretName=pullSecret
+```
 
 | Argument          | Required? | Value                                              | Default Value                                   |
 |-------------------|-----------|----------------------------------------------------|-------------------------------------------------|
@@ -23,15 +31,15 @@ The following command-line arguments are available, specified on the command lin
 | environment       | No        | The environment to create for the administrator    | demo                                            |
 | fullName          | Yes       | The full name of the administrator                 |                                                 |
 | hostname          | No        | The hostname of YBA (defaults to                   | yugaware-yugaware-ui.yugabyte.svc.cluster.local |
-| latitude          | No        | The latitude coordinate of the region              | 41                                              |
-| longitude         | No        | The longitude coordinate of the region             | -95                                             |
 | kubeconfigPath    | Yes       | The path to the kubeconfig to use                  |                                                 |
 | name              | No        | The provider's name                                | gke                                             |
 | namespace         | No        | The namespace to deploy Yugabyte nodes in          | yb-nodes                                        |
 | password          | Yes       | The password of the administrator                  |                                                 |
 | pullSecretName    | No        | The name of the pull secret for Yugabyte nodes     | yugabyte-k8s-pull-secret                        |
 | pullSecretPath    | Yes       | The path to the pull secret's file contents        |                                                 |
-| region            | No        | The name of the region for the Kubernetes provider | us-central1                                     |
+| region            | Yes       | The name of the region for the Kubernetes provider |                                                 |
+| regionLatitude    | Yes       | The latitude coordinate of the region              |                                                 |
+| regionLongitude   | Yes       | The longitude coordinate of the region             |                                                 |
 | replicationFactor | No        | The replication factor for the universe            | 1                                               |
 | serviceAccount    | No        | The service account to use for universe creation   | yugabyte-platform-universe-management           |
 | storageClass      | No        | The storage class for persistent volumes           | standard                                        |
@@ -40,4 +48,4 @@ The following command-line arguments are available, specified on the command lin
 | ybSoftwareVersion | Yes       | The version of Yugabyte to use for the universe    | 2.17.0.0-b24                                    |
 | ycqlPassword      | Yes       | The password for the yugabyte user for YCQL        |                                                 |
 | ysqlPassword      | Yes       | The password for the yugabyte user for YSQL        |                                                 |
-| zone              | No        | The name of the zone for the Kubernetes provider   | us-central1-a                                   |
+| zone              | Yes       | The name of the zone for the Kubernetes provider   |                                                 |

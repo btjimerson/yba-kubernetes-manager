@@ -14,7 +14,7 @@ import xyz.pintobean.yba.domain.YbaArguments;
  */
 public abstract class YbaClientAction {
  
-    protected YbaArguments args;
+    YbaArguments args;
 
     /**
      * Runs this action. Subclasses should override this with their specific action logic.

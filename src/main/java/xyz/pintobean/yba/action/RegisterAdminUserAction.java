@@ -27,8 +27,8 @@ public class RegisterAdminUserAction extends YbaClientAction {
         AdminUser adminUser = new AdminUser();
         adminUser.setConfirmEULA(Boolean.TRUE);
         adminUser.setName(args.getFullName());
-        adminUser.setPassword(args.getPassword());
-        adminUser.setConfirmPassword(args.getPassword());
+        adminUser.setPassword(args.getAdminPassword());
+        adminUser.setConfirmPassword(args.getAdminPassword());
         adminUser.setEmail(args.getEmail());
         adminUser.setCode(args.getEnvironment());
         
