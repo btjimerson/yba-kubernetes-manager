@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>xyz.pintobean</groupId>
 	<artifactId>yba-kubernetes-manager</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<name>yba-kubernetes-manager</name>
 	<description>Manager for YBA on Kubernetes</description>
 	<properties>
