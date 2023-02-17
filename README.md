@@ -25,27 +25,27 @@ and to set it in a properties file:
 yba.pullSecretName=pullSecret
 ```
 
-| Argument          | Required? | Value                                              | Default Value                                   |
-|-------------------|-----------|----------------------------------------------------|-------------------------------------------------|
-| email             | Yes       | The email address of the administrator             |                                                 |
-| environment       | No        | The environment to create for the administrator    | demo                                            |
-| fullName          | Yes       | The full name of the administrator                 |                                                 |
-| hostname          | No        | The hostname of YBA (defaults to                   | yugaware-yugaware-ui.yugabyte.svc.cluster.local |
-| kubeconfigPath    | Yes       | The path to the kubeconfig to use                  |                                                 |
-| name              | No        | The provider's name                                | gke                                             |
-| namespace         | No        | The namespace to deploy Yugabyte nodes in          | yb-nodes                                        |
-| password          | Yes       | The password of the administrator                  |                                                 |
-| pullSecretName    | No        | The name of the pull secret for Yugabyte nodes     | yugabyte-k8s-pull-secret                        |
-| pullSecretPath    | Yes       | The path to the pull secret's file contents        |                                                 |
-| region            | Yes       | The name of the region for the Kubernetes provider |                                                 |
-| regionLatitude    | Yes       | The latitude coordinate of the region              |                                                 |
-| regionLongitude   | Yes       | The longitude coordinate of the region             |                                                 |
-| replicationFactor | No        | The replication factor for the universe            | 1                                               |
-| serviceAccount    | No        | The service account to use for universe creation   | yugabyte-platform-universe-management           |
-| storageClass      | No        | The storage class for persistent volumes           | standard                                        |
-| universeName      | Yes       | The name of the universe                           |                                                 |
-| volumeSize        | No        | The size in GB to use for node volumes             | 100                                             |
-| ybSoftwareVersion | Yes       | The version of Yugabyte to use for the universe    | 2.17.0.0-b24                                    |
-| ycqlPassword      | Yes       | The password for the yugabyte user for YCQL        |                                                 |
-| ysqlPassword      | Yes       | The password for the yugabyte user for YSQL        |                                                 |
-| zone              | Yes       | The name of the zone for the Kubernetes provider   |                                                 |
+| Argument          | Required? | Value                                              | Default Value                         |
+|-------------------|-----------|----------------------------------------------------|---------------------------------------|
+| email             | Yes       | The email address of the administrator             |                                       |
+| environment       | No        | The environment to create for the administrator    | demo                                  |
+| fullName          | Yes       | The full name of the administrator                 |                                       |
+| hostname          | Yes       | The hostname of YBA                                |                                       |
+| kubeconfigPath    | Yes       | The path to the kubeconfig to use                  |                                       |
+| name              | No        | The provider's name                                | gke                                   |
+| namespace         | No        | The namespace to deploy Yugabyte nodes in          | yb-nodes                              |
+| password          | Yes       | The password of the administrator                  |                                       |
+| pullSecretName    | No        | The name of the pull secret for Yugabyte nodes     | yugabyte-k8s-pull-secret              |
+| pullSecretPath    | Yes       | The path to the pull secret's file contents        |                                       |
+| region            | Yes       | The name of the region for the Kubernetes provider |                                       |
+| regionLatitude    | Yes       | The latitude coordinate of the region              |                                       |
+| regionLongitude   | Yes       | The longitude coordinate of the region             |                                       |
+| replicationFactor | No        | The replication factor for the universe            | 1                                     |
+| serviceAccount    | No        | The service account to use for universe creation   | yugabyte-platform-universe-management |
+| storageClass      | No        | The storage class for persistent volumes           | standard                              |
+| universeName      | Yes       | The name of the universe                           |                                       |
+| volumeSize        | No        | The size in GB to use for node volumes             | 100                                   |
+| ybSoftwareVersion | Yes       | The version of Yugabyte to use for the universe    | 2.17.0.0-b24                          |
+| ycqlPassword      | Yes       | The password for the yugabyte user for YCQL        |                                       |
+| ysqlPassword      | Yes       | The password for the yugabyte user for YSQL        |                                       |
+| zone              | Yes       | The name of the zone for the Kubernetes provider   |                                       |
