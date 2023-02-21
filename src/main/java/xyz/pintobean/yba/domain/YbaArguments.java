@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix="yba")
 public class YbaArguments {
 
-    private String adminPassword; 
+    private String adminPassword;
+    private String apiToken; 
     private String email;
     private String environment;
     private String fullName; 
@@ -35,6 +36,12 @@ public class YbaArguments {
     }
     public void setAdminPassword(String adminPassword) {
         this.adminPassword = adminPassword;
+    }
+    public String getApiToken() {
+        return apiToken;
+    }
+    public void setApiToken(String apiToken) {
+        this.apiToken = apiToken;
     }
     public String getEmail() {
         return email;

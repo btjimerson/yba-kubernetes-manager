@@ -27,7 +27,6 @@ public class CreateUniverseAction extends YbaClientAction {
 
     private static final Log LOG = LogFactory.getLog(CreateUniverseAction.class);
 
-    private String apiToken;
     private String customerUuid;
     private String providerUuid;
 
@@ -45,7 +44,7 @@ public class CreateUniverseAction extends YbaClientAction {
         url.append("/regions");
 
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<Object> httpEntity = this.getHttpEntity(this.getApiToken());
+        HttpEntity<Object> httpEntity = this.getHttpEntity(args.getApiToken());
         List<Region> regions = restTemplate.exchange(
             url.toString(),
             HttpMethod.GET,
@@ -114,7 +113,7 @@ public class CreateUniverseAction extends YbaClientAction {
 
         //API call
         httpEntity = this.getHttpEntity(
-            this.getApiToken(),
+            args.getApiToken(),
             universe
         );
         LOG.info(String.format("Sending Create Universe request to %s", url.toString()));
@@ -134,14 +133,6 @@ public class CreateUniverseAction extends YbaClientAction {
         return result;
 
 
-    }
-
-    public String getApiToken() {
-        return apiToken;
-    }
-
-    public void setApiToken(String apiToken) {
-        this.apiToken = apiToken;
     }
 
     public String getCustomerUuid() {

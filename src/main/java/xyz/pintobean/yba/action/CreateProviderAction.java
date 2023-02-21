@@ -13,10 +13,13 @@ import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import xyz.pintobean.yba.domain.provider.Config;
 import xyz.pintobean.yba.domain.provider.Config__1;
+import xyz.pintobean.yba.domain.provider.ExistingProvider;
 import xyz.pintobean.yba.domain.provider.Provider;
 import xyz.pintobean.yba.domain.provider.Region;
 import xyz.pintobean.yba.domain.provider.Zone;
@@ -28,7 +31,6 @@ public class CreateProviderAction extends YbaClientAction {
 
     private static final Log LOG = LogFactory.getLog(CreateProviderAction.class);
 
-    private String apiToken;
     private String customerUuid;
 
     /**
@@ -37,6 +39,42 @@ public class CreateProviderAction extends YbaClientAction {
     @Override
     public Map<String, Object> runAction() {
   
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        //Check to see if provider exists
+        //Build request URL
+        StringBuilder url = new StringBuilder();
+        url.append(normalizeHostname(args.getHostname()));
+        url.append("/api/v1/customers/");
+        url.append(this.getCustomerUuid());
+        url.append("/providers");
+        LOG.debug(String.format("URL created = [%s]", url.toString()));
+
+        //API call
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<Object> httpEntity = this.getHttpEntity(args.getApiToken());
+        LOG.info(String.format("Sending list providers request to %s", url.toString()));
+        ResponseEntity<ExistingProvider[]> existingProvidersEntity = restTemplate.exchange(
+            url.toString(),
+            HttpMethod.GET,
+            httpEntity,
+            ExistingProvider[].class
+        );
+        ExistingProvider[] existingProviders = existingProvidersEntity.getBody();
+        if (existingProviders.length > 0 &&
+            existingProviders[0].getName() != null &&
+            existingProviders[0].getName().equals(args.getProviderName()) &&
+            "kubernetes".equals(existingProviders[0].getCode())) {
+            LOG.info(
+                String.format(
+                    "Provider already exists with uuid [%s]. Returning existing provider.",
+                    existingProviders[0].getUuid()));
+            result.put("result", "provider user already exists");
+            result.put("providerUuid", existingProviders[0].getUuid());
+            return result;
+        }
+        //End check for existing provider
+
         //Kube configuration
         Config__1 zoneConfig = new Config__1();
         zoneConfig.setKubeconfigContent(this.readFile(args.getKubeconfigPath()));
@@ -79,7 +117,7 @@ public class CreateProviderAction extends YbaClientAction {
         provider.setRegionList(regionList);
 
         //Build request URL
-        StringBuilder url = new StringBuilder();
+        url = new StringBuilder();
         url.append(normalizeHostname(args.getHostname()));
         url.append("/api/v1/customers/");
         url.append(this.getCustomerUuid());
@@ -87,8 +125,7 @@ public class CreateProviderAction extends YbaClientAction {
         LOG.debug(String.format("URL created = [%s]", url.toString()));
 
         //API call
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<Object> httpEntity = this.getHttpEntity(this.getApiToken(), provider);
+        httpEntity = this.getHttpEntity(args.getApiToken(), provider);
         LOG.info(String.format("Sending Create Provider request to %s", url.toString()));
         String response = restTemplate.postForObject(
             url.toString(), 
@@ -98,7 +135,6 @@ public class CreateProviderAction extends YbaClientAction {
         LOG.debug(String.format("Response for create provider = [%s]", response));
 
         JSONObject jsonObject = new JSONObject(response);
-        Map<String, Object> result = new HashMap<String, Object>();
         result.put("result", "success");
         result.put("providerUuid", jsonObject.getString("uuid"));
         return result;
@@ -139,22 +175,6 @@ public class CreateProviderAction extends YbaClientAction {
         LOG.debug(String.format("File contents = [\n%s\n]", fileContents));
         return fileContents;
 
-    }
-
-    /**
-     * Gets the API token
-     * @return The API token
-     */
-    public String getApiToken() {
-        return apiToken;
-    }
-
-    /**
-     * Sets the API token
-     * @param apiToken The API token
-     */
-    public void setApiToken(String apiToken) {
-        this.apiToken = apiToken;
     }
 
     /**
