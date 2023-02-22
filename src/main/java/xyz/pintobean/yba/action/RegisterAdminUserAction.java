@@ -53,7 +53,7 @@ public class RegisterAdminUserAction extends YbaClientAction {
                 Customer[].class
             );
             Customer[] existingCustomers = customersResponseEntity.getBody();
-            if (existingCustomers.length > 0) {
+            if (existingCustomers != null && existingCustomers.length > 0) {
                 LOG.info(
                     String.format(
                         "Admin user already exists with uuid [%s]. Returning existing user.",

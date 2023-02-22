@@ -61,7 +61,8 @@ public class CreateProviderAction extends YbaClientAction {
             ExistingProvider[].class
         );
         ExistingProvider[] existingProviders = existingProvidersEntity.getBody();
-        if (existingProviders.length > 0 &&
+        if (existingProviders != null &&
+            existingProviders.length > 0 &&
             existingProviders[0].getName() != null &&
             existingProviders[0].getName().equals(args.getProviderName()) &&
             "kubernetes".equals(existingProviders[0].getCode())) {
