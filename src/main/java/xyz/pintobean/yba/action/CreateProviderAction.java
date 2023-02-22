@@ -52,7 +52,7 @@ public class CreateProviderAction extends YbaClientAction {
 
         //API call
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<Object> httpEntity = this.getHttpEntity(args.getApiToken());
+        HttpEntity<Object> httpEntity = this.getHttpEntity(this.getApiToken("yugabyte-api-token", "yugabyte"));
         LOG.info(String.format("Sending list providers request to %s", url.toString()));
         ResponseEntity<ExistingProvider[]> existingProvidersEntity = restTemplate.exchange(
             url.toString(),
@@ -125,7 +125,7 @@ public class CreateProviderAction extends YbaClientAction {
         LOG.debug(String.format("URL created = [%s]", url.toString()));
 
         //API call
-        httpEntity = this.getHttpEntity(args.getApiToken(), provider);
+        httpEntity = this.getHttpEntity(this.getApiToken("yugabyte-api-token", "yugabyte"), provider);
         LOG.info(String.format("Sending Create Provider request to %s", url.toString()));
         String response = restTemplate.postForObject(
             url.toString(), 
@@ -153,7 +153,7 @@ public class CreateProviderAction extends YbaClientAction {
             fileReader = new FileReader(filePath);
         } catch (FileNotFoundException fnfe) {
             LOG.error(String.format("File for file path [%s] not found. Exiting...", filePath), fnfe);
-            return null;
+            throw new RuntimeException(String.format("Error reading file [%s].", filePath));
         }
 
         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -167,7 +167,7 @@ public class CreateProviderAction extends YbaClientAction {
             bufferedReader.close();
         } catch (IOException ioe) {
             LOG.error(String.format("Error reading file [%s]. Exiting...", filePath), ioe);
-            return null;
+            throw new RuntimeException(String.format("Error reading file [%s].", filePath));
         }
 
         String fileContents = sb.toString();

@@ -44,7 +44,7 @@ public class CreateUniverseAction extends YbaClientAction {
         url.append("/regions");
 
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<Object> httpEntity = this.getHttpEntity(args.getApiToken());
+        HttpEntity<Object> httpEntity = this.getHttpEntity(this.getApiToken("yugabyte-api-token", "yugabyte"));
         List<Region> regions = restTemplate.exchange(
             url.toString(),
             HttpMethod.GET,
@@ -113,7 +113,7 @@ public class CreateUniverseAction extends YbaClientAction {
 
         //API call
         httpEntity = this.getHttpEntity(
-            args.getApiToken(),
+            this.getApiToken("yugabyte-api-token", "yugabyte"),
             universe
         );
         LOG.info(String.format("Sending Create Universe request to %s", url.toString()));

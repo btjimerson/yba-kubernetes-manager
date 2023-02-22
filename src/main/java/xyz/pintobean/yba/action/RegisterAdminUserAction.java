@@ -1,5 +1,6 @@
 package xyz.pintobean.yba.action;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import io.fabric8.kubernetes.api.model.Secret;
+import io.fabric8.kubernetes.api.model.SecretBuilder;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientBuilder;
 import xyz.pintobean.yba.domain.user.AdminUser;
 import xyz.pintobean.yba.domain.user.Customer;
 
@@ -32,14 +37,14 @@ public class RegisterAdminUserAction extends YbaClientAction {
         RestTemplate restTemplate = new RestTemplate();
 
         //Check to see if user exists
-        if (args.getApiToken() != null && !args.getApiToken().isEmpty()) {
+        if (this.getApiToken("yugabyte-api-token", "yugabyte") != null) {
             //Build request URL
             url.append(normalizeHostname(args.getHostname()));
             url.append("/api/v1/customers");
             LOG.debug(String.format("URL created = [%s]", url.toString()));
 
             //API call
-            HttpEntity<Object> httpEntity = this.getHttpEntity(args.getApiToken());
+            HttpEntity<Object> httpEntity = this.getHttpEntity(this.getApiToken("yugabyte-api-token", "yugabyte"));
             LOG.info(String.format("Sending list customers request to %s", url.toString()));
             ResponseEntity<Customer[]> customersResponseEntity = restTemplate.exchange(
                 url.toString(),
@@ -84,13 +89,33 @@ public class RegisterAdminUserAction extends YbaClientAction {
         );
         LOG.debug(String.format("Response for register admin = [%s]", response));
 
-        //Return values
+        
         JSONObject jsonObject = new JSONObject(response);
+
+        //Write api token
+        this.writeApiTokenToSecret(jsonObject.getString("apiToken"), "yugabyte-api-token", "yugabyte");
+
+        //Return values
         result.put("result", "success");
         result.put("apiToken", jsonObject.getString("apiToken"));
         result.put("customerUuid", jsonObject.getString("customerUUID"));
         result.put("userUuid", jsonObject.getString("userUUID"));
         return result;
+
+    }
+
+    private void writeApiTokenToSecret(String apiToken, String secretName, String namespace) {
+
+        String encodedSecret = Base64.getEncoder().encodeToString(apiToken.getBytes());
+        KubernetesClient client = new KubernetesClientBuilder().build();
+
+        Secret apiTokenSecret = new SecretBuilder()
+            .withNewMetadata().withName(secretName).withNamespace(namespace).endMetadata()
+            .addToData("apiToken", encodedSecret)
+            .build();
+
+        Secret createdSecret = client.secrets().inNamespace(namespace).resource(apiTokenSecret).createOrReplace();
+        LOG.info(String.format("Created new secret {} with API token.", createdSecret.getMetadata().getName()));
 
     }
 

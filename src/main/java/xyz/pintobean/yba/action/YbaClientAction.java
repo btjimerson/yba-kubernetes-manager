@@ -1,12 +1,18 @@
 package xyz.pintobean.yba.action;
 
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
+import io.fabric8.kubernetes.api.model.Secret;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientBuilder;
 import xyz.pintobean.yba.domain.YbaArguments;
 
 /**
@@ -15,6 +21,7 @@ import xyz.pintobean.yba.domain.YbaArguments;
 public abstract class YbaClientAction {
  
     YbaArguments args;
+    private static final Log LOG = LogFactory.getLog(YbaClientAction.class);
 
     /**
      * Runs this action. Subclasses should override this with their specific action logic.
@@ -74,5 +81,37 @@ public abstract class YbaClientAction {
         
         HttpEntity<Object> httpEntity = new HttpEntity<>(httpHeaders);
         return httpEntity;
+    }
+
+    /**
+     * Reads the API token secret
+     * @param secretName The name of the secret containing the API token
+     * @param namespace The namespace of the secret
+     * @return The Base64 decoded secret
+     * @throws ApiException
+     */
+    protected String getApiToken(String secretName, String namespace) {
+
+        KubernetesClient client = new KubernetesClientBuilder().build();
+        Secret apiTokenSecret = client.
+            secrets().
+            inNamespace(namespace).
+            withName(secretName).
+            get();
+        
+        if (apiTokenSecret != null) {
+            Map<String, String> data = apiTokenSecret.getData();
+            if (data != null && data.containsKey("apiToken")) {
+                byte[] apiToken = Base64.getDecoder().decode(data.get("apiToken"));
+                return new String(apiToken);
+            }
+        }
+
+        LOG.info(String.format(
+            "API token not found with name [%s] in namespace [%s]. Returning null.", 
+            secretName, 
+            namespace));
+        return null;
+
     }
 }
