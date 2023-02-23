@@ -45,7 +45,7 @@ public class RegisterAdminUserAction extends YbaClientAction {
 
             //API call
             HttpEntity<Object> httpEntity = this.getHttpEntity(this.getApiToken("yugabyte-api-token", "yugabyte"));
-            LOG.info(String.format("Sending list customers request to %s", url.toString()));
+            LOG.info(String.format("Sending List Customers request to %s", url.toString()));
             ResponseEntity<Customer[]> customersResponseEntity = restTemplate.exchange(
                 url.toString(),
                 HttpMethod.GET, 

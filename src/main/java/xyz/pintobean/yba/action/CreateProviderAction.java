@@ -53,7 +53,7 @@ public class CreateProviderAction extends YbaClientAction {
         //API call
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<Object> httpEntity = this.getHttpEntity(this.getApiToken("yugabyte-api-token", "yugabyte"));
-        LOG.info(String.format("Sending list providers request to %s", url.toString()));
+        LOG.info(String.format("Sending List Providers request to %s", url.toString()));
         ResponseEntity<ExistingProvider[]> existingProvidersEntity = restTemplate.exchange(
             url.toString(),
             HttpMethod.GET,
