@@ -49,8 +49,6 @@ public class CreateProviderAction extends YbaClientAction {
         url.append(this.getCustomerUuid());
         url.append("/providers");
         LOG.debug(String.format("URL created = [%s]", url.toString()));
-
-        //API call
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<Object> httpEntity = this.getHttpEntity(this.getApiToken("yugabyte-api-token", "yugabyte"));
         LOG.info(String.format("Sending List Providers request to %s", url.toString()));
